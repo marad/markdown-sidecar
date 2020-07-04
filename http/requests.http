@@ -1,0 +1,17 @@
+
+@base = http://localhost:12345
+
+POST {{base}}/inbox/urls
+Content-Type: application/json
+
+{
+    "url": "http://blog.radoszewski.pl/",
+    "comment": "Mój blog"
+}
+
+
+###
+POST {{base}}/inbox/notes
+Content-Type: text/plain
+
+This is sparta!

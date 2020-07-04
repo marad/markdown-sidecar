@@ -1,18 +1,18 @@
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
-import io.github.marad.obsidianSidecar.Inbox
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.github.marad.obsidianSidecar.app.Inbox
+import org.junit.Test
 import java.nio.file.FileSystem
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.test.BeforeTest
 import kotlin.test.expect
 
 class InboxSpec {
     private lateinit var fs: FileSystem
     private lateinit var inboxPath: Path
 
-    @BeforeEach
+    @BeforeTest
     fun setup() {
         fs = Jimfs.newFileSystem(Configuration.unix())
         inboxPath = fs.getPath("/vault/inbox.md")

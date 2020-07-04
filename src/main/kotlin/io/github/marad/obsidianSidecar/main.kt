@@ -1,25 +1,15 @@
 package io.github.marad.obsidianSidecar
 
-import java.nio.file.Path
+import io.github.marad.obsidianSidecar.app.Configuration
+import io.github.marad.obsidianSidecar.app.Sidecar
+import io.github.marad.obsidianSidecar.server.Server
 import java.nio.file.Paths
-import java.time.DayOfWeek
-import java.time.LocalDate
 
-fun main(args: Array<String>) {
-    val config = Configuration(Paths.get("C:\\sync\\pcloud\\obsidian"))
-    val inbox = Inbox(config.inboxPath)
-//    inbox.addUrl("http://blog.radoszewski.pl", "Mój blog")
-//    inbox.addNote("Zrobić sobie coś do jedzenia")
-    println(DayOfWeek.from(LocalDate.now()))
-    val tomorrow = LocalDate.now().plusDays(1)
-    DailyNote(config.vaultPath, tomorrow).create()
+fun main() {
+    val config = Configuration(Paths.get("D:\\sync\\pcloud\\obsidian"))
+    val sidecar = Sidecar(config)
+    sidecar.dailyNote().create()
+    Server(sidecar).start()
 }
 
-data class Configuration(
-    val vaultPath: Path,
-    val date: LocalDate = LocalDate.now()
-) {
-    private val inboxIcon = "\uD83D\uDCE7"
-    val inboxPath = vaultPath.resolve("$inboxIcon Inbox.md")
-}
 

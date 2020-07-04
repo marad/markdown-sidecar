@@ -1,6 +1,6 @@
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
-import io.github.marad.obsidianSidecar.DailyNote
+import io.github.marad.obsidianSidecar.app.DailyNote
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
