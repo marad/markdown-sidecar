@@ -19,6 +19,7 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.EngineMain
 import io.ktor.server.netty.Netty
 import kotlinx.html.body
 
@@ -30,34 +31,7 @@ class Server(private val sidecar: Sidecar) {
                 port = 46054
             }
             module {
-                install(CORS) {
-                    method(HttpMethod.Options)
-                    anyHost()
-                    allowNonSimpleContentTypes = true
-                }
-                install(ContentNegotiation) {
-                    jackson {}
-                }
-                routing {
-                    get("/") {
-                        call.respondHtml {
-                            body {
-                                text("Hello World")
-                            }
-                        }
-                    }
-
-                    post("/inbox/urls") {
-                        val dto = call.receive<AddUrlToInbox>()
-                        sidecar.openInbox().addUrl(dto.url, dto.comment)
-                        call.respond(HttpStatusCode.NoContent)
-                    }
-
-                    post("/inbox/notes") {
-                        sidecar.openInbox().addNote(call.receiveText())
-                        call.respond(HttpStatusCode.NoContent)
-                    }
-                }
+                api(sidecar)
             }
         }
 
@@ -66,5 +40,35 @@ class Server(private val sidecar: Sidecar) {
 
 }
 
-data class AddUrlToInbox(val url: String, val comment: String?)
+fun Application.api(sidecar: Sidecar) {
+    install(CORS) {
+        method(HttpMethod.Options)
+        anyHost()
+        allowNonSimpleContentTypes = true
+    }
+    install(ContentNegotiation) {
+        jackson {}
+    }
+    routing {
+        get("/") {
+            call.respondHtml {
+                body {
+                    text("Hello World")
+                }
+            }
+        }
 
+        post("/inbox/urls") {
+            val dto = call.receive<AddUrlToInbox>()
+            sidecar.openInbox().addUrl(dto.url, dto.comment)
+            call.respond(HttpStatusCode.NoContent)
+        }
+
+        post("/inbox/notes") {
+            sidecar.openInbox().addNote(call.receiveText())
+            call.respond(HttpStatusCode.NoContent)
+        }
+    }
+}
+
+data class AddUrlToInbox(val url: String, val comment: String?)
